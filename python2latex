@@ -1,0 +1,13 @@
+#!/usr/bin/env python
+import os
+import sys
+import lathon
+
+with open(sys.argv[1]) as _file:
+    string_file = _file.read()
+my_parser = lathon.Parser()
+my_parser.parse(string_file)
+path = my_parser.write()
+os.system("pdflatex -interaction=batchmode -jobname=ausgabe" +
+          " -output-directory=" + "/tmp/lathon/ " + path)
+os.system("evince /tmp/lathon/ausgabe.pdf")
