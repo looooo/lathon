@@ -1,7 +1,0 @@
-lathon.py
-python2latex
-setup.py
-lathon.egg-info/PKG-INFO
-lathon.egg-info/SOURCES.txt
-lathon.egg-info/dependency_links.txt
-lathon.egg-info/top_level.txt
