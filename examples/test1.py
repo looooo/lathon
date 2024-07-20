@@ -26,7 +26,7 @@ plt.legend()
 plt.grid()
 lathon.Parser.draw(name="plot", scale=0.6, text="this is a plot")
 
-## lathon <some thing
+## lathon some thing
 var_2 = 10 * s
 var_3 = var_1 * var_2
 var_4 = 100

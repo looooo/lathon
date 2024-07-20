@@ -1,8 +1,13 @@
 import os
+import sys
 import code
+import warnings
+
 from sympy import latex, sympify, N
 from sympy.physics.units import *
 
+
+warnings.filterwarnings("ignore")
 
 def use_units(units):
     Parser.prefered_units = units
@@ -258,7 +263,7 @@ class Parser(object):
             else:
                 output += "& & \\text{""}\n"
             output += "\\end{flalign}\n"
-            for find, replcae in self.replacement_map.items():
+            for find, replace in self.replacement_map.items():
                 output.replace(find, replace)
             return output
 
@@ -273,3 +278,15 @@ class Parser(object):
             else:
                 return(True)
 
+def python2latex():
+    if len(sys.argv) < 2:
+        print("usage: python2latex <filename>")
+        sys.exit(1)
+    with open(sys.argv[1]) as _file:
+        string_file = _file.read()
+    my_parser = Parser()
+    my_parser.parse(string_file)
+    path = my_parser.write()
+    os.system("pdflatex -interaction=batchmode -jobname=ausgabe" +
+            " -output-directory=" + "/tmp/lathon/ " + path)
+    os.system("evince /tmp/lathon/ausgabe.pdf")
