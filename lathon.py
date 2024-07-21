@@ -255,16 +255,26 @@ class Parser(object):
             val = value = self.interpreter.locals[equations[0]]
             quant = None
             mul_value = 1.
+            if unit:
+                print(f"value: {value}")
+                sym_unit = sympify(unit, locals=self.units)
+                print(f"sym_unit: {sym_unit}")
+                value = convert_to(value, sym_unit)
             if hasattr(value, "as_two_terms"):
                 value.nsimplify()
                 value, quant = value.as_two_terms()
+                print(f"value: {value}")
+                print(f"quant: {quant}")
                 replace_quants = (self.file_buffer.prefered_units + 
                                   self.prefered_units)
-                if unit:
-                    replace_quants = [[sympify(unit, locals=self.units), unit]]
+                # if unit:
+                #     replace_quants = [[sympify(unit, locals=self.units), unit]]
                 for test_quant, replace in replace_quants:
                     if (quant / test_quant).is_Number:
+                        print(f"quant: {quant}")
+                        print(f"test_quant: {test_quant}")
                         mul_value = quant / test_quant
+                        print(f"mul_value: {mul_value}")
                         quant = "\\," + latex(sympify(replace), mul_symbol="dot")
                         break
                 else:
@@ -273,7 +283,7 @@ class Parser(object):
                 outlist[-1] = latex(value * mul_value)
             else:
                 outlist.append("=")
-                outlist.append(latex(round(value * mul_value, 2)))
+                outlist.append(latex(value * mul_value))
             if manual_unit:
                 outlist.append(manual_unit)
             elif quant:

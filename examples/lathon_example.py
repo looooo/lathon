@@ -18,9 +18,9 @@ rho = 2700. * 10**(-9) * kg / mm ** 3       #c the density of aluminium
 A = w * h_                              	#c the cross section area of the cantilever beam
 
 ##lathon <<Analytic solution
-I_yy = w * h_ ** 3 / 12                                          #c the second moment of area of the cantilever beam
+I_yy = w * h_ ** 3 / 12                                          #u cm**4 #c the second moment of area of the cantilever beam
 k_1 = 4.73                                                       #c constant for the first bending eigenfrequency of a cantilever beam
-nu_b1 = k_1 ** 2 / 2 / pi / l ** 2 * sqrt(E_ * I_yy / A / rho)   #r nub1 #n Hz #c the first bending eigenfrequency of a cantilever beam
+nu_b1 = k_1 ** 2 / 2 / pi / l ** 2 * sqrt(E_ * I_yy / A / rho)   #r nub1 #u hertz #c the first bending eigenfrequency of a cantilever beam
 
 
 
