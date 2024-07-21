@@ -27,4 +27,10 @@ nu_b1 = k_1 ** 2 / 2 / pi / l ** 2 * sqrt(E_ * I_yy / A / rho)   #c the first be
 ##latex <<FreeCAD solution
 # trying to find the first bending eigenfrequency of a cantilever beam with FreeCAD failed with osx arm:
 ##python
-lathon.Parser.add_image("osx_arm_freecad_result.png", scale=0.5, text="cantilever beam")
+lathon.Parser.add_image("osx_arm_freecad_result.png", scale=0.5, text="cantilever beam with freecad on osx-arm")
+
+##latex
+# with linux 64 the result looks better
+##python
+lathon.Parser.add_image("linux_64_freecad_result.png", scale=0.2, text="cantilever beam with freecad on linux-64")
+lathon.Parser.add_image("linux_64_ccx_result.png", scale=0.4, text="cantilever beam result")

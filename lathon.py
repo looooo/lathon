@@ -142,7 +142,7 @@ class Parser(object):
         path = self.write()
         os.system("pdflatex -interaction=batchmode -jobname=ausgabe" +
                   " -output-directory=" + "/tmp/lathon/ " + path)
-        os.system("/Applications/Firefox.app/Contents/MacOS/firefox /tmp/lathon/ausgabe.pdf")
+        os.system("evince /tmp/lathon/ausgabe.pdf")
 
     def split_blocks(self, string):
         # string = "## python\n" + string
