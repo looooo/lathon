@@ -142,7 +142,7 @@ class Parser(object):
         path = self.write()
         os.system("pdflatex -interaction=batchmode -jobname=ausgabe" +
                   " -output-directory=" + "/tmp/lathon/ " + path)
-        os.system("evince /tmp/lathon/ausgabe.pdf")
+        os.system("/Applications/Firefox.app/Contents/MacOS/firefox /tmp/lathon/ausgabe.pdf")
 
     def split_blocks(self, string):
         # string = "## python\n" + string
@@ -207,6 +207,14 @@ class Parser(object):
 
     def replace_leading_space(self, string):
         return self.replace_leading_space(string[1:]) if string[0] == " " else string
+    
+    def replace_ending_space(self, string):
+        return self.replace_ending_space(string[:-1]) if string[-1] == " " else string
+    
+    def replace_tip_space(self, string):
+        string = self.replace_leading_space(string)
+        string = self.replace_ending_space(string)
+        return string
 
     def py2la(self, string):
         outlist = []
@@ -216,15 +224,18 @@ class Parser(object):
             comment = ""
             unit = ""
             manual_unit = None
+            reference = None
             for i, st in enumerate(string):
                 if i == 0:
                     equations = st
                 elif st[0] == "c":   # comment
                     comment = self.replace_leading_space(st[1:])
-                elif st[0] == "u":
+                elif st[0] == "u":   # unit not sure how to use this
                     unit = self.replace_leading_space(st[1:])
-                elif st[0] == "n":
+                elif st[0] == "n":   # manual unit
                     manual_unit = self.replace_leading_space(st[1:])
+                elif st[0] == "r":   # reference
+                    reference = self.replace_tip_space(st[1:])
 
             # equ handling:
             equations = equations.replace(" ", "")
@@ -263,7 +274,6 @@ class Parser(object):
             else:
                 outlist.append("=")
                 outlist.append(latex(round(value * mul_value, 2)))
-            print(manual_unit)
             if manual_unit:
                 outlist.append(manual_unit)
             elif quant:
@@ -271,9 +281,11 @@ class Parser(object):
             for equ in outlist:
                 output += equ
             if comment:
-                output += "& & \\text{" + comment + "}\n"
+                output += "& & \\text{" + comment + "}"
             else:
-                output += "& & \\text{""}\n"
+                output += "& & \\text{""}"
+            if reference:
+                output += " \\label{" + reference + "}\n"
             output += "\\end{flalign}\n"
             for find, replace in self.replacement_map.items():
                 output.replace(find, replace)

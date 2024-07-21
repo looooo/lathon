@@ -25,4 +25,5 @@
 # \end{itemize}
 
 ##latex <<lathon python API by example
-# \\\lstinputlisting[language=python]{doc.py}
+# \lstinputlisting[language=python]{doc.py}
+# \newpage
