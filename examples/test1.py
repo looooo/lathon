@@ -13,7 +13,7 @@ lathon.use_units = [
 # \newpage
 
 ##pl <Angaben
-var_1 = 1.2 * J
+gamma = 1.2 * J
 
 ##la <<plot
 # here is demostrated how to draw matplotlib 
@@ -28,9 +28,9 @@ plt.grid()
 lathon.Parser.draw(name="plot", scale=0.6, text="this is a plot")
 
 ##pl <something
-var_2 = 10 * s
-var_3 = var_1 * var_2
-var_4 = 100
+alpha = 10 * s
+beta = gamma * alpha
+delta = 100
 
 ##la <some latex stuff
 
