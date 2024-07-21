@@ -132,14 +132,13 @@ class Parser(object):
             _file.write(prepend)
             _file.write(self.latex_string)
             _file.write(append)
-            _file.close()
         return path
 
     def show(self):
         path = self.write()
         os.system("pdflatex -interaction=batchmode -jobname=ausgabe" +
-          " -output-directory=" + "/tmp/lathon/ " + path)
-        os.system("evince /tmp/lathon/ausgabe.pdf")
+                  " -output-directory=" + "/tmp/lathon/ " + path)
+        os.system("/Applications/Firefox.app/Contents/MacOS/firefox /tmp/lathon/ausgabe.pdf")
 
     def split_blocks(self, string):
         string = "## py\n" + string
@@ -156,7 +155,6 @@ class Parser(object):
     def make_headline(self, header):
         header = header.split(" ", 1)
         header = [i for i in header if i]
-        print(len(header))
         if len(header) == 2:
             h = header[1].rsplit("<")
             depth = len(h)
@@ -287,7 +285,4 @@ def python2latex():
         string_file = _file.read()
     my_parser = Parser()
     my_parser.parse(string_file)
-    path = my_parser.write()
-    os.system("pdflatex -interaction=batchmode -jobname=ausgabe" +
-              " -output-directory=" + "/tmp/lathon/ " + path)
-    os.system("/Applications/Firefox.app/Contents/MacOS/firefox /tmp/lathon/ausgabe.pdf")
+    my_parser.show()
