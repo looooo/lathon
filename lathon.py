@@ -51,12 +51,12 @@ class Parser(object):
             '\\usepackage{babel}\n'
             '\\usepackage{a4wide}\n'
             '\\usepackage{amsmath}\n'
-            '\\setlength{\mathindent}{1cm} \n'
+            '\\setlength{\\mathindent}{1cm} \n'
             '\\usepackage{graphicx}\n'
             '\\usepackage{titlesec}\n'
             '\\usepackage{gensymb}\n'
             '\\usepackage{float}\n'
-            '\AtBeginDocument{%\n'
+            '\\AtBeginDocument{%\n'
             '   \\abovedisplayskip=4pt plus 3pt minus 4pt\n'
             '   \\abovedisplayshortskip=0pt plus 3pt\n'
             '   \\belowdisplayskip=3pt plus 3pt minus 3pt\n'
@@ -68,15 +68,15 @@ class Parser(object):
         cls.latex_buffer += "\\title{" + title + "}\n"
         if author:
             cls.latex_buffer += "\\author{" + author + "}\n"
-        cls.latex_buffer += "\maketitle\n"
+        cls.latex_buffer += "\\maketitle\n"
 
     @classmethod
     def section(cls, name):
-        cls.latex_buffer += "\section{" + name + "}\n"
+        cls.latex_buffer += "\\section{" + name + "}\n"
 
     @classmethod
     def subsection(cls, name):
-        cls.latex_buffer += "\subsection{" + name + "}\n"
+        cls.latex_buffer += "\\subsection{" + name + "}\n"
 
     @classmethod
     def text(cls, string):
@@ -88,8 +88,8 @@ class Parser(object):
         path = check_path("/tmp/lathon/plots/", name, ".png")
         plt.savefig(path)
         cls.latex_buffer += "\\begin{figure}[H]"
-        cls.latex_buffer += "\label{figure1}\n"
-        cls.latex_buffer += "\centerline{\includegraphics[scale=" + str(scale) + "]{"+ path + "}}"
+        cls.latex_buffer += "\\label{figure1}\n"
+        cls.latex_buffer += "\\centerline{\\includegraphics[scale=" + str(scale) + "]{"+ path + "}}"
         cls.latex_buffer += "\\caption{" + text + "}"
         cls.latex_buffer += "\\end{figure}"
         plt.close()
@@ -125,7 +125,7 @@ class Parser(object):
     def write(self):
         prepend = self.prependtext
         prepend += "\\begin{document}\n"
-        append = "\n\end{document}"
+        append = "\n\\end{document}"
         path = check_path("/tmp/lathon/", "lathon.tex")
 
         with open(path, "w") as _file:
@@ -154,15 +154,16 @@ class Parser(object):
                 self._block_dict[header](block)
 
     def make_headline(self, header):
-        header = header.rsplit(" ")
+        header = header.split(" ", 1)
         header = [i for i in header if i]
+        print(len(header))
         if len(header) == 2:
             h = header[1].rsplit("<")
             depth = len(h)
             if depth == 2:
-                self.latex_string += "\section{" + h[-1] + "}\n"
+                self.latex_string += "\\section{" + h[-1] + "}\n"
             elif depth == 3:
-                self.latex_string += "\subsection{" + h[-1] + "}\n"
+                self.latex_string += "\\subsection{" + h[-1] + "}\n"
         return header[0]
 
     def run_python_block(self, block):
@@ -243,10 +244,10 @@ class Parser(object):
                 for test_quant, replace in replace_quants:
                     if (quant / test_quant).is_Number:
                         mul_value = quant / test_quant
-                        quant = "\," + latex(sympify(replace), mul_symbol="dot")
+                        quant = "\\," + latex(sympify(replace), mul_symbol="dot")
                         break
                 else:
-                    quant = "\," + latex(quant, mul_symbol = "dot")
+                    quant = "\\," + latex(quant, mul_symbol = "dot")
             if str(val) == str(temp) or (val - temp) == 0:
                 outlist[-1] = latex(value * mul_value)
             else:
@@ -288,5 +289,5 @@ def python2latex():
     my_parser.parse(string_file)
     path = my_parser.write()
     os.system("pdflatex -interaction=batchmode -jobname=ausgabe" +
-            " -output-directory=" + "/tmp/lathon/ " + path)
-    os.system("evince /tmp/lathon/ausgabe.pdf")
+              " -output-directory=" + "/tmp/lathon/ " + path)
+    os.system("/Applications/Firefox.app/Contents/MacOS/firefox /tmp/lathon/ausgabe.pdf")
