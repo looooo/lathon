@@ -1,13 +1,10 @@
 import os
 import sys
 import code
-import warnings
 
 from sympy import latex, sympify, N
 from sympy.physics.units import *
 
-
-warnings.filterwarnings("ignore")
 
 def use_units(units):
     Parser.prefered_units = units
@@ -38,9 +35,7 @@ class Parser(object):
             "python": self.run_python_block,
             "latex": self.run_latex_block,
             "lathon": self.run_lathon_block,
-            "py": self.run_python_block,
-            "la": self.run_latex_block,
-            "pl": self.run_lathon_block
+            "code": self.run_code_block,
             }
         self.units = {}
         self.latex_string = ''
@@ -56,6 +51,7 @@ class Parser(object):
             '\\usepackage{titlesec}\n'
             '\\usepackage{gensymb}\n'
             '\\usepackage{float}\n'
+            '\\usepackage{listings}'
             '\\AtBeginDocument{%\n'
             '   \\abovedisplayskip=4pt plus 3pt minus 4pt\n'
             '   \\abovedisplayshortskip=0pt plus 3pt\n'
@@ -93,6 +89,14 @@ class Parser(object):
         cls.latex_buffer += "\\caption{" + text + "}"
         cls.latex_buffer += "\\end{figure}"
         plt.close()
+    
+    @classmethod
+    def add_image(cls, path, scale=1, text=""):
+        cls.latex_buffer += "\\begin{figure}[H]"
+        cls.latex_buffer += "\\label{figure1}\n"
+        cls.latex_buffer += "\\centerline{\\includegraphics[scale=" + str(scale) + "]{"+ path + "}}"
+        cls.latex_buffer += "\\caption{" + text + "}"
+        cls.latex_buffer += "\\end{figure}"
 
     @property
     def file_buffer(self):
@@ -141,13 +145,15 @@ class Parser(object):
         os.system("/Applications/Firefox.app/Contents/MacOS/firefox /tmp/lathon/ausgabe.pdf")
 
     def split_blocks(self, string):
-        string = "## py\n" + string
-        string = string.rsplit("##")
+        # string = "## python\n" + string
+        string = string.rsplit("\n##")
+        # removing the first two identifiers
+        if string[0][:2] == "##":
+            string[0] = string[0][2:]
         for block in string:
             if block:
                 block = block.splitlines()
                 header = block[0]
-                header.rsplit(" ")
                 block = '\n'.join(block[1:])
                 header = self.make_headline(header)
                 self._block_dict[header](block)
@@ -178,6 +184,12 @@ class Parser(object):
             if line:
                 self.interpreter.runcode(line)
                 self.latex_string += self.py2la(line)
+
+    def run_code_block(self, block):
+        self.interpreter.runcode(block)
+        self.latex_string += "\\begin{lstlisting}\n"
+        self.latex_string += block
+        self.latex_string += "\n\\end{lstlisting}\n"
 
     def equtoparts(self, string):
         equations = []
@@ -250,11 +262,12 @@ class Parser(object):
                 outlist[-1] = latex(value * mul_value)
             else:
                 outlist.append("=")
-                outlist.append(latex(value * mul_value))
-            if quant:
-                outlist.append(quant)
-            elif manual_unit:
+                outlist.append(latex(round(value * mul_value, 2)))
+            print(manual_unit)
+            if manual_unit:
                 outlist.append(manual_unit)
+            elif quant:
+                outlist.append(quant)
             for equ in outlist:
                 output += equ
             if comment:
