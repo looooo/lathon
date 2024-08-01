@@ -5,6 +5,8 @@ import code
 from sympy import latex, sympify, N
 from sympy.physics.units import *
 
+# from pytexit import py2tex
+
 
 def use_units(units):
     Parser.prefered_units = units
@@ -28,8 +30,6 @@ class Parser(object):
 
     def __init__(self):
         self.interpreter = code.InteractiveInterpreter()
-        self.equunit = ""
-        self.equstr = ""
 
         self._block_dict = {
             "python": self.run_python_block,
@@ -247,38 +247,31 @@ class Parser(object):
                 else:                 
                     temp = sympify(
                             equ,
-                            convert_xor=True,
-                            strict=False,
-                            rational=False,
-                            locals=self.units)
+                            convert_xor=True,  # ^ -> **
+                            strict=False,      # no idea
+                            rational=False,    # 1/2 -> 0.5
+                            locals=self.units  # eg m -> sympy.physics.units.meter
+                            )
                     outlist.append(latex(temp, mul_symbol="dot"))
             val = value = self.interpreter.locals[equations[0]]
             quant = None
             mul_value = 1.
             if unit:
-                print(f"value: {value}")
                 sym_unit = sympify(unit, locals=self.units)
-                print(f"sym_unit: {sym_unit}")
                 value = convert_to(value, sym_unit)
             if hasattr(value, "as_two_terms"):
                 value.nsimplify()
                 value, quant = value.as_two_terms()
-                print(f"value: {value}")
-                print(f"quant: {quant}")
                 replace_quants = (self.file_buffer.prefered_units + 
                                   self.prefered_units)
-                # if unit:
-                #     replace_quants = [[sympify(unit, locals=self.units), unit]]
                 for test_quant, replace in replace_quants:
                     if (quant / test_quant).is_Number:
-                        print(f"quant: {quant}")
-                        print(f"test_quant: {test_quant}")
                         mul_value = quant / test_quant
-                        print(f"mul_value: {mul_value}")
                         quant = "\\," + latex(sympify(replace), mul_symbol="dot")
                         break
                 else:
                     quant = "\\," + latex(quant, mul_symbol = "dot")
+            # what happens here?
             if str(val) == str(temp) or (val - temp) == 0:
                 outlist[-1] = latex(value * mul_value)
             else:
