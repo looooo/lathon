@@ -1,7 +1,7 @@
 ##latex <Example
-# In this example we are computing the first eigenfrequency of a cantilever beam. First
+# In this example we are computing the first eigenfrequencies of a cantilever beam. First
 # we are going to use the analytic solution and then we are going to compare this result
-# with a computation by FreeCAD.
+# with a computation by FreeCAD via the FEM-workbench.
 ##code <<imports
 import lathon
 from numpy import pi
