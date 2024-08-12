@@ -1,3 +1,7 @@
+## python
+import numpy as np
+import matplotlib.pyplot as plt
+from sympy.physics.units import J, s
 
 ##code <<units definitions
 lathon.use_units = [

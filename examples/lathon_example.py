@@ -2,6 +2,7 @@
 # In this example we are computing the first eigenfrequencies of a cantilever beam. First
 # we are going to use the analytic solution and then we are going to compare this result
 # with a computation by FreeCAD via the FEM-workbench.
+
 ##code <<imports
 import lathon
 from numpy import pi
@@ -15,7 +16,7 @@ w  = 200 * mm                             	#c the width of the cantilever beam
 h_ = 100 * mm                            	#c the height of the cantilever beam
 A = w * h_                              	#c the cross section area of the cantilever beam
 E_ = 70. * 10**6 * kg / mm / s ** 2     	#c the Young's modulus for aluminium
-nu = 0.3 									#c Poisson atio
+nu = 0.33 									#c Poisson atio
 G = 1 / (2 * (1 + nu)) * E_
 rho = 2700. * 10**(-9) * kg / mm ** 3       #c the density of aluminium
 
@@ -28,7 +29,7 @@ c_t1 = 1 / 3 * (1 - 0.630 / (w / h_) + 0.052 / (w / h_) ** 5)     #c approximati
 I_t = c_t1 * h_**3 * w  										  #u cm**4 #c approximation formula
 nu_b1 = k_b1 ** 2 / 2 / pi / l_ ** 2 * sqrt(E_ * I_yy / A / rho)  #r nub1 #u hertz #c the first bending eigenfrequency of a cantilever beam
 nu_b2 = k_b1 ** 2 / 2 / pi / l_ ** 2 * sqrt(E_ * I_zz / A / rho)  #r nub2 #u hertz #c the first bending eigenfrequency of a cantilever beam
-nu_t1 = 1 / (l_ * 2) * sqrt(G * I_t / (rho * I_p))				  #u hertz
+nu_t1 = 1 / (l_ * 2) * sqrt(G * I_t / (rho * I_p))				  #r nut1 #u hertz
 
 
 ##latex <<FreeCAD result

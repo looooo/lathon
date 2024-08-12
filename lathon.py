@@ -1,8 +1,10 @@
 import os
 import sys
 import code
+import re
 
-from sympy import latex, sympify, N
+import sympy
+from sympy import latex, sympify
 from sympy.physics.units import *
 
 # from pytexit import py2tex
@@ -51,7 +53,7 @@ class Parser(object):
             '\\usepackage{titlesec}\n'
             '\\usepackage{gensymb}\n'
             '\\usepackage{float}\n'
-            '\\usepackage{listings}'
+            '\\usepackage{listings}\n'
             '\\AtBeginDocument{%\n'
             '   \\abovedisplayskip=4pt plus 3pt minus 4pt\n'
             '   \\abovedisplayshortskip=0pt plus 3pt\n'
@@ -142,7 +144,7 @@ class Parser(object):
         path = self.write()
         os.system("pdflatex -interaction=batchmode -jobname=ausgabe" +
                   " -output-directory=" + "/tmp/lathon/ " + path)
-        os.system("/Applications/Firefox.app/Contents/MacOS/firefox /tmp/lathon/ausgabe.pdf")
+        os.system("evince /tmp/lathon/ausgabe.pdf")
 
     def split_blocks(self, string):
         # string = "## python\n" + string
@@ -216,6 +218,7 @@ class Parser(object):
         string = self.replace_ending_space(string)
         return string
 
+
     def py2la(self, string):
         outlist = []
         output = ""
@@ -252,7 +255,7 @@ class Parser(object):
                             rational=False,    # 1/2 -> 0.5
                             locals=self.units  # eg m -> sympy.physics.units.meter
                             )
-                    outlist.append(latex(temp, mul_symbol="dot"))
+                    outlist.append(sympy.latex(temp, mul_symbol="dot"))
             val = value = self.interpreter.locals[equations[0]]
             quant = None
             mul_value = 1.
@@ -267,16 +270,16 @@ class Parser(object):
                 for test_quant, replace in replace_quants:
                     if (quant / test_quant).is_Number:
                         mul_value = quant / test_quant
-                        quant = "\\," + latex(sympify(replace), mul_symbol="dot")
+                        quant = "\\," + sympy.latex(sympify(replace), mul_symbol="dot")
                         break
                 else:
-                    quant = "\\," + latex(quant, mul_symbol = "dot")
-            # what happens here?
+                    quant = "\\," + sympy.latex(quant, mul_symbol = "dot")
+            # if a value is directly set to a variable
             if str(val) == str(temp) or (val - temp) == 0:
-                outlist[-1] = latex(value * mul_value)
+                outlist[-1] = sympy.latex(f"{value * mul_value:.2e}")
             else:
                 outlist.append("=")
-                outlist.append(latex(value * mul_value))
+                outlist.append(sympy.latex(f"{value * mul_value:.2e}"))
             if manual_unit:
                 outlist.append(manual_unit)
             elif quant:
