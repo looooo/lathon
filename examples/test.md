@@ -6,16 +6,25 @@ One basic idea is to extend python with comments which are used to identify diff
 ## blocks  
 
 the python file is diveded in several blocks. The following blocks are possible:
-- python code (only interpreted): `#p`
-- python code (interpreted and shown): `#pm`
-- markdown directly `#m`
+- python code (only interpreted): `'''p`
+- python code (interpreted and shown): `'''#pm`
+- markdown directly `'''#m`
 
 ## representing formulars in markdown
 
-$a^2 + b^2 = c^2$  
-$\alpha + \beta = \gamma$
+\begin{equation}
+   E = mc^2
+\end{equation}
 
-$$
-a^2 + b^2
-$$
+In equation \eqref{eq:sample}, we find the value of an
+interesting integral:
 
+\begin{equation}
+  \int_0^\infty \frac{x^3}{e^x-1}\,dx = \frac{\pi^4}{15}
+  \label{eq:sample}
+\end{equation}
+
+
+´´´python
+a = 10
+´´´

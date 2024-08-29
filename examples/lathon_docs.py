@@ -1,6 +1,12 @@
+## python
+import lathon
+lathon.Parser.title("Introduction to lathon", "Lorenz Lechner")
+
 ##latex
+# \newpage
 # \tableofcontents
 # \newpage
+
 
 ##latex <lathon introduction
 # lathon is a tool for documentation of numerical computation of tasks usually arising in engineering fields.

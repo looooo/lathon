@@ -257,13 +257,18 @@ class Parser(object):
                             )
                     outlist.append(sympy.latex(temp, mul_symbol="dot"))
             val = value = self.interpreter.locals[equations[0]]
+            try:
+                value = value.simplify()
+                value = value.nsimplify()
+            except AttributeError as e:
+                pass
+
             quant = None
             mul_value = 1.
             if unit:
                 sym_unit = sympify(unit, locals=self.units)
                 value = convert_to(value, sym_unit)
             if hasattr(value, "as_two_terms"):
-                value.nsimplify()
                 value, quant = value.as_two_terms()
                 replace_quants = (self.file_buffer.prefered_units + 
                                   self.prefered_units)
