@@ -7,8 +7,6 @@ import sympy
 from sympy import latex, sympify
 from sympy.physics.units import *
 
-# from pytexit import py2tex
-
 
 def use_units(units):
     Parser.prefered_units = units
