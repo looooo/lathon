@@ -189,6 +189,6 @@ class MathMarkRenderer(MathJaxRenderer, PygmentsRenderer):
 
 with open('examples/mathmark_example.md', 'r') as fin:
     with MathMarkRenderer() as renderer:
-        with open("/Users/lo/tmp/test.html", "w") as fout:
+        with open("examples/test.html", "w") as fout:
             fout.write(renderer.render(mistletoe.Document(fin)))
 
